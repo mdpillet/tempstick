@@ -51,8 +51,9 @@
         </receiver>
 
         <service
-            android:name=".WidgetUpdateService"
-            android:exported="false" />
+            android:name=".WidgetUpdateJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
 </manifest>

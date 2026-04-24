@@ -53,7 +53,7 @@ class TempStickWidget : AppWidgetProvider() {
         const val ACTION_PERIODIC_UPDATE = "com.tempstick.widget.ACTION_PERIODIC_UPDATE"
 
         fun enqueueUpdate(context: Context, widgetId: Int) {
-            WidgetUpdateService.start(context, widgetId)
+            WidgetUpdateJobService.schedule(context, widgetId)
         }
 
         fun schedulePeriodicUpdate(context: Context, widgetId: Int, intervalMinutes: Int) {
