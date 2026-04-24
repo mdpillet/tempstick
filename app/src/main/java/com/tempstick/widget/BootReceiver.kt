@@ -14,8 +14,8 @@ class BootReceiver : BroadcastReceiver() {
         val prefs = WidgetPreferences
         manager.getAppWidgetIds(component).forEach { widgetId ->
             val intervalMinutes = prefs.getUpdateIntervalMinutes(context, widgetId)
-            TempStickWidget.schedulePeriodicUpdate(context, widgetId, intervalMinutes)
-            TempStickWidget.enqueueUpdate(context, widgetId)
+            try { TempStickWidget.schedulePeriodicUpdate(context, widgetId, intervalMinutes) } catch (_: Exception) {}
+            try { TempStickWidget.enqueueUpdate(context, widgetId) } catch (_: Exception) {}
         }
     }
 }

@@ -20,7 +20,7 @@ class TempStickWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         for (widgetId in appWidgetIds) {
-            enqueueUpdate(context, widgetId)
+            try { enqueueUpdate(context, widgetId) } catch (_: Exception) {}
         }
     }
 
@@ -34,7 +34,7 @@ class TempStickWidget : AppWidgetProvider() {
                 )
                 if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
                     if (intent.action == ACTION_REFRESH) showRefreshing(context, widgetId)
-                    enqueueUpdate(context, widgetId)
+                    try { enqueueUpdate(context, widgetId) } catch (_: Exception) {}
                 }
             }
         }

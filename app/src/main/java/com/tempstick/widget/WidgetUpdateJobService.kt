@@ -55,7 +55,6 @@ class WidgetUpdateJobService : JobService() {
                 ComponentName(context, WidgetUpdateJobService::class.java)
             )
                 .setExtras(extras)
-                .setOverrideDeadline(0)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .build()
             js.schedule(job)

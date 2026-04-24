@@ -27,6 +27,7 @@
             android:textSize="14sp"
             android:textColor="#666666" />
 
+        <!-- API Key -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,7 +51,7 @@
             android:id="@+id/btn_load_sensors"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/btn_load_sensors" />
 
         <ProgressBar
@@ -58,11 +59,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:visibility="gone" />
 
+        <!-- Sensor spinner (shown when API load succeeds) -->
         <LinearLayout
-            android:id="@+id/sensor_group"
+            android:id="@+id/sensor_spinner_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -80,58 +82,80 @@
                 android:id="@+id/spinner_sensor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="@string/label_temperature_unit"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/radio_fahrenheit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/fahrenheit" />
-
-                <RadioButton
-                    android:id="@+id/radio_celsius"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/celsius" />
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="@string/label_update_interval"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spinner_interval"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp" />
-
-            <Button
-                android:id="@+id/btn_save"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_save" />
+                android:layout_marginBottom="8dp" />
 
         </LinearLayout>
+
+        <!-- Sensor ID manual entry (always visible) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="@string/label_sensor_id"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_sensor_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:inputType="textNoSuggestions"
+            android:maxLines="1"
+            android:hint="@string/hint_sensor_id"
+            android:padding="10dp"
+            android:background="@android:drawable/edit_text" />
+
+        <!-- Temperature unit -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="@string/label_temperature_unit"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_fahrenheit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/fahrenheit" />
+
+            <RadioButton
+                android:id="@+id/radio_celsius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/celsius" />
+        </RadioGroup>
+
+        <!-- Update interval -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="@string/label_update_interval"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spinner_interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp" />
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_save" />
 
     </LinearLayout>
 </ScrollView>

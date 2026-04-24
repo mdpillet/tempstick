@@ -13,4 +13,6 @@
     <string name="label_update_interval">Update Interval</string>
     <string name="fahrenheit">Fahrenheit (°F)</string>
     <string name="celsius">Celsius (°C)</string>
+    <string name="label_sensor_id">Sensor ID</string>
+    <string name="hint_sensor_id">Auto-filled above, or enter your Sensor ID manually</string>
 </resources>

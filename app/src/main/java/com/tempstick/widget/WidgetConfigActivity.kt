@@ -5,13 +5,14 @@ import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.Spinner
-import android.widget.LinearLayout
 import android.widget.Toast
 
 class WidgetConfigActivity : Activity() {
@@ -22,8 +23,9 @@ class WidgetConfigActivity : Activity() {
     private lateinit var etApiKey: EditText
     private lateinit var btnLoadSensors: Button
     private lateinit var progressBar: ProgressBar
-    private lateinit var sensorGroup: LinearLayout
+    private lateinit var sensorSpinnerGroup: LinearLayout
     private lateinit var spinnerSensor: Spinner
+    private lateinit var etSensorId: EditText
     private lateinit var radioFahrenheit: RadioButton
     private lateinit var spinnerInterval: Spinner
     private lateinit var btnSave: Button
@@ -48,8 +50,9 @@ class WidgetConfigActivity : Activity() {
         etApiKey = findViewById(R.id.et_api_key)
         btnLoadSensors = findViewById(R.id.btn_load_sensors)
         progressBar = findViewById(R.id.progress_bar)
-        sensorGroup = findViewById(R.id.sensor_group)
+        sensorSpinnerGroup = findViewById(R.id.sensor_spinner_group)
         spinnerSensor = findViewById(R.id.spinner_sensor)
+        etSensorId = findViewById(R.id.et_sensor_id)
         radioFahrenheit = findViewById(R.id.radio_fahrenheit)
         spinnerInterval = findViewById(R.id.spinner_interval)
         btnSave = findViewById(R.id.btn_save)
@@ -57,10 +60,22 @@ class WidgetConfigActivity : Activity() {
         val savedApiKey = WidgetPreferences.getApiKey(this)
         if (savedApiKey.isNotEmpty()) etApiKey.setText(savedApiKey)
 
+        val savedSensorId = WidgetPreferences.getSensorId(this, widgetId)
+        if (savedSensorId.isNotEmpty()) etSensorId.setText(savedSensorId)
+
         spinnerInterval.adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item,
             arrayOf("Every 15 minutes", "Every 30 minutes", "Every hour")
         ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+
+        spinnerSensor.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+                if (sensors.isNotEmpty() && pos < sensors.size) {
+                    etSensorId.setText(sensors[pos].sensorId)
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
 
         btnLoadSensors.setOnClickListener { loadSensors() }
         btnSave.setOnClickListener { saveConfiguration() }
@@ -75,7 +90,7 @@ class WidgetConfigActivity : Activity() {
 
         progressBar.visibility = View.VISIBLE
         btnLoadSensors.isEnabled = false
-        sensorGroup.visibility = View.GONE
+        sensorSpinnerGroup.visibility = View.GONE
 
         Thread {
             try {
@@ -84,20 +99,28 @@ class WidgetConfigActivity : Activity() {
                     WidgetPreferences.saveApiKey(this, apiKey)
                     sensors = fetched
                     if (sensors.isEmpty()) {
-                        Toast.makeText(this, "No sensors found on this account", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "No sensors found. Enter Sensor ID manually below.", Toast.LENGTH_LONG).show()
                     } else {
                         spinnerSensor.adapter = ArrayAdapter(
                             this, android.R.layout.simple_spinner_item,
                             sensors.map { it.sensorName }.toTypedArray()
                         ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
-                        sensorGroup.visibility = View.VISIBLE
+                        sensorSpinnerGroup.visibility = View.VISIBLE
+                        etSensorId.setText(sensors[0].sensorId)
                     }
                     progressBar.visibility = View.GONE
                     btnLoadSensors.isEnabled = true
                 }
             } catch (e: Exception) {
                 runOnUiThread {
-                    Toast.makeText(this, "Could not load sensors: ${e.message}", Toast.LENGTH_LONG).show()
+                    val msg = when {
+                        e.message?.contains("402") == true ->
+                            "API access unavailable (402). Enter your Sensor ID manually below (find it in the TempStick app)."
+                        e.message?.contains("401") == true || e.message?.contains("403") == true ->
+                            "Invalid API key. Check it in the TempStick app under Settings."
+                        else -> "Could not load sensors: ${e.message}. Enter Sensor ID manually below."
+                    }
+                    Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
                     progressBar.visibility = View.GONE
                     btnLoadSensors.isEnabled = true
                 }
@@ -106,21 +129,32 @@ class WidgetConfigActivity : Activity() {
     }
 
     private fun saveConfiguration() {
-        if (sensors.isEmpty()) {
-            Toast.makeText(this, "Load your sensors first", Toast.LENGTH_SHORT).show()
+        val apiKey = etApiKey.text.toString().trim()
+        val sensorId = etSensorId.text.toString().trim()
+
+        if (apiKey.isEmpty()) {
+            Toast.makeText(this, "Enter your TempStick API key", Toast.LENGTH_SHORT).show()
             return
         }
-        val sensor = sensors[spinnerSensor.selectedItemPosition]
+        if (sensorId.isEmpty()) {
+            Toast.makeText(this, "Enter a Sensor ID or tap Load Sensors first", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val sensorName = sensors.find { it.sensorId == sensorId }?.sensorName ?: ""
         val useFahrenheit = radioFahrenheit.isChecked
         val intervalMinutes = intervalOptions[spinnerInterval.selectedItemPosition]
 
-        WidgetPreferences.saveSensorId(this, widgetId, sensor.sensorId)
-        WidgetPreferences.saveSensorName(this, widgetId, sensor.sensorName)
+        WidgetPreferences.saveApiKey(this, apiKey)
+        WidgetPreferences.saveSensorId(this, widgetId, sensorId)
+        WidgetPreferences.saveSensorName(this, widgetId, sensorName)
         WidgetPreferences.saveUseFahrenheit(this, widgetId, useFahrenheit)
         WidgetPreferences.saveUpdateIntervalMinutes(this, widgetId, intervalMinutes)
 
-        TempStickWidget.schedulePeriodicUpdate(this, widgetId, intervalMinutes)
-        TempStickWidget.enqueueUpdate(this, widgetId)
+        try {
+            TempStickWidget.schedulePeriodicUpdate(this, widgetId, intervalMinutes)
+            TempStickWidget.enqueueUpdate(this, widgetId)
+        } catch (_: Exception) {}
 
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
         finish()
