@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.TempStickWidget" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+    <!-- Using platform theme so no external library is needed -->
+    <style name="Theme.TempStickWidget" parent="@android:style/Theme.Material.Light.DarkActionBar">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryVariant</item>
+        <item name="android:colorAccent">@color/colorSecondary</item>
         <item name="android:statusBarColor">@color/colorPrimaryVariant</item>
     </style>
 </resources>

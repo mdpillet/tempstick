@@ -11,7 +11,10 @@ class BootReceiver : BroadcastReceiver() {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED) return
         val manager = AppWidgetManager.getInstance(context)
         val component = ComponentName(context, TempStickWidget::class.java)
+        val prefs = WidgetPreferences
         manager.getAppWidgetIds(component).forEach { widgetId ->
+            val intervalMinutes = prefs.getUpdateIntervalMinutes(context, widgetId)
+            TempStickWidget.schedulePeriodicUpdate(context, widgetId, intervalMinutes)
             TempStickWidget.enqueueUpdate(context, widgetId)
         }
     }
