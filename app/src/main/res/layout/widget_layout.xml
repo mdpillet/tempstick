@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
+    android:padding="12dp">
+
+    <!-- Sensor name - top left -->
+    <TextView
+        android:id="@+id/widget_sensor_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/widget_label"
+        android:textColor="#B0C4DE"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.05" />
+
+    <!-- Temperature - center -->
+    <TextView
+        android:id="@+id/widget_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="--"
+        android:textColor="#FFFFFF"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <!-- Humidity - below temperature -->
+    <TextView
+        android:id="@+id/widget_humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_temperature"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2dp"
+        android:text=""
+        android:textColor="#90B4E0"
+        android:textSize="14sp" />
+
+    <!-- Last updated - bottom left -->
+    <TextView
+        android:id="@+id/widget_updated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:text=""
+        android:textColor="#607090"
+        android:textSize="10sp" />
+
+</RelativeLayout>

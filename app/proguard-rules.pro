@@ -1,0 +1,2 @@
+-keep class com.tempstick.widget.** { *; }
+-keepattributes *Annotation*

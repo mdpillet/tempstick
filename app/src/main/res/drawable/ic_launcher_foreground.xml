@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Thermometer body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,20 a6,6 0 0 0 -6,6 L48,70 a12,12 0 1 0 12,0 L60,26 a6,6 0 0 0 -6,-6Z" />
+    <!-- Mercury fill -->
+    <path
+        android:fillColor="#4FC3F7"
+        android:pathData="M54,28 a4,4 0 0 0 -4,4 L50,70 a10,10 0 1 0 8,0 L58,32 a4,4 0 0 0 -4,-4Z" />
+</vector>

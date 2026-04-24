@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TempStick Widget</string>
+    <string name="widget_label">TempStick</string>
+    <string name="widget_description">Displays live temperature and humidity from your TempStick sensor</string>
+    <string name="widget_config_title">TempStick Widget</string>
+    <string name="widget_config_subtitle">Connect to your TempStick account to show sensor readings on your homescreen.</string>
+    <string name="hint_api_key">TempStick API Key</string>
+    <string name="btn_load_sensors">Load Sensors</string>
+    <string name="btn_save">Add Widget</string>
+    <string name="label_sensor">Sensor</string>
+    <string name="label_temperature_unit">Temperature Unit</string>
+    <string name="label_update_interval">Update Interval</string>
+    <string name="fahrenheit">Fahrenheit (°F)</string>
+    <string name="celsius">Celsius (°C)</string>
+</resources>
