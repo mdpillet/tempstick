@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ANDROID_JAR=/usr/lib/android-sdk/platforms/android-34/android.jar
-AAPT2=/usr/lib/android-sdk/build-tools/29.0.3/aapt2
+AAPT2=/tmp/sdk-tools/build-tools/aapt2
 APKSIGNER=/usr/lib/android-sdk/build-tools/29.0.3/apksigner
 ZIPALIGN=/usr/lib/android-sdk/build-tools/29.0.3/zipalign
 KOTLINC=/opt/kotlinc/bin/kotlinc
