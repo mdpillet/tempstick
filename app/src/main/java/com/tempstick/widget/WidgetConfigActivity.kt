@@ -25,7 +25,6 @@ class WidgetConfigActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setResult(RESULT_CANCELED)
 
         widgetId = intent.getIntExtra(
             AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -85,7 +84,6 @@ class WidgetConfigActivity : Activity() {
             TempStickWidget.enqueueUpdate(this, widgetId)
         } catch (_: Exception) {}
 
-        setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
         finish()
     }
 }

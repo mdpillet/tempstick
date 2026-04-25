@@ -126,15 +126,29 @@ class TempStickWidget : AppWidgetProvider() {
         private fun applyViews(context: Context, widgetId: Int, block: (RemoteViews) -> Unit) {
             val manager = AppWidgetManager.getInstance(context)
             val views = RemoteViews(context.packageName, R.layout.widget_layout)
-            val refreshIntent = Intent(context, TempStickWidget::class.java).apply {
-                action = ACTION_REFRESH
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+
+            val configured = WidgetPreferences.getSensorId(context, widgetId).isNotEmpty()
+            val clickPi = if (configured) {
+                val refreshIntent = Intent(context, TempStickWidget::class.java).apply {
+                    action = ACTION_REFRESH
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+                }
+                PendingIntent.getBroadcast(
+                    context, widgetId, refreshIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                val configIntent = Intent(context, WidgetConfigActivity::class.java).apply {
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                }
+                PendingIntent.getActivity(
+                    context, widgetId, configIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
             }
-            val pi = PendingIntent.getBroadcast(
-                context, widgetId, refreshIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-            views.setOnClickPendingIntent(R.id.widget_root, pi)
+
+            views.setOnClickPendingIntent(R.id.widget_root, clickPi)
             block(views)
             manager.updateAppWidget(widgetId, views)
         }
