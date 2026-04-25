@@ -20,7 +20,12 @@ class TempStickWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         for (widgetId in appWidgetIds) {
-            try { enqueueUpdate(context, widgetId) } catch (_: Exception) {}
+            if (WidgetPreferences.getSensorId(context, widgetId).isEmpty()) {
+                // Not yet configured — set click handler immediately without waiting for the job.
+                showError(context, widgetId, "Tap to configure")
+            } else {
+                try { enqueueUpdate(context, widgetId) } catch (_: Exception) {}
+            }
         }
     }
 
