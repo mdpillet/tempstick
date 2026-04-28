@@ -7,6 +7,8 @@
     <string name="widget_config_subtitle">Enter your TempStick API Key and Sensor ID. You can switch to the TempStick app to look them up and come back here anytime.</string>
     <string name="hint_api_key">TempStick API Key</string>
     <string name="btn_save">Add Widget</string>
+    <string name="btn_save_changes">Save Changes</string>
+    <string name="btn_validating">Checking…</string>
     <string name="label_temperature_unit">Temperature Unit</string>
     <string name="label_update_interval">Update Interval</string>
     <string name="fahrenheit">Fahrenheit (°F)</string>
@@ -14,4 +16,10 @@
     <string name="label_sensor_id">Sensor ID</string>
     <string name="hint_sensor_id">e.g. 1a2b3c4d</string>
     <string name="sensor_id_help">Find your Sensor ID in the TempStick app → tap your sensor → Settings.</string>
+    <string name="widget_tap_to_configure">Tap to configure</string>
+    <string name="main_subtitle">Live temperature and humidity from your TempStick sensors</string>
+    <string name="main_add_instructions">To add a widget: long-press your homescreen → Widgets → TempStick Widget</string>
+    <string name="main_your_widgets">Your widgets</string>
+    <string name="main_no_widgets">No widgets added yet.\n\nLong-press your homescreen and select\nWidgets → TempStick Widget to get started.</string>
+    <string name="main_widget_not_configured">Not configured — tap widget on homescreen</string>
 </resources>

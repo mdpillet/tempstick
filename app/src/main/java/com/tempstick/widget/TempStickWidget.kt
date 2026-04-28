@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
+import android.view.View
 import android.widget.RemoteViews
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -21,8 +22,7 @@ class TempStickWidget : AppWidgetProvider() {
     ) {
         for (widgetId in appWidgetIds) {
             if (WidgetPreferences.getSensorId(context, widgetId).isEmpty()) {
-                // Not yet configured — set click handler immediately without waiting for the job.
-                showError(context, widgetId, "Tap to configure")
+                showUnconfigured(context, widgetId)
             } else {
                 try { enqueueUpdate(context, widgetId) } catch (_: Exception) {}
             }
@@ -91,8 +91,13 @@ class TempStickWidget : AppWidgetProvider() {
 
         fun updateWithSensorData(context: Context, widgetId: Int, sensor: SensorData) {
             val useFahrenheit = WidgetPreferences.getUseFahrenheit(context, widgetId)
-            val sensorName = WidgetPreferences.getSensorName(context, widgetId)
-                .ifEmpty { sensor.sensorName }
+
+            if (sensor.sensorName.isNotEmpty()) {
+                WidgetPreferences.saveSensorName(context, widgetId, sensor.sensorName)
+            }
+            val sensorName = sensor.sensorName.ifEmpty {
+                WidgetPreferences.getSensorName(context, widgetId).ifEmpty { "TempStick" }
+            }
 
             val tempText = sensor.lastTempCelsius?.let { c ->
                 val v = if (useFahrenheit) c * 9.0 / 5.0 + 32 else c
@@ -112,14 +117,17 @@ class TempStickWidget : AppWidgetProvider() {
         }
 
         fun showError(context: Context, widgetId: Int, message: String) {
-            val name = WidgetPreferences.getSensorName(context, widgetId)
-                .ifEmpty { "TempStick" }
+            val name = WidgetPreferences.getSensorName(context, widgetId).ifEmpty { "TempStick" }
             applyViews(context, widgetId) { views ->
                 views.setTextViewText(R.id.widget_sensor_name, name)
                 views.setTextViewText(R.id.widget_temperature, "--")
                 views.setTextViewText(R.id.widget_humidity, "")
                 views.setTextViewText(R.id.widget_updated, message)
             }
+        }
+
+        fun showUnconfigured(context: Context, widgetId: Int) {
+            applyViews(context, widgetId) { _ -> }
         }
 
         private fun showRefreshing(context: Context, widgetId: Int) {
@@ -133,6 +141,15 @@ class TempStickWidget : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.widget_layout)
 
             val configured = WidgetPreferences.getSensorId(context, widgetId).isNotEmpty()
+            views.setViewVisibility(
+                R.id.widget_data,
+                if (configured) View.VISIBLE else View.GONE
+            )
+            views.setViewVisibility(
+                R.id.widget_configure_prompt,
+                if (configured) View.GONE else View.VISIBLE
+            )
+
             val clickPi = if (configured) {
                 val refreshIntent = Intent(context, TempStickWidget::class.java).apply {
                     action = ACTION_REFRESH
