@@ -63,6 +63,11 @@ class WidgetConfigActivity : Activity() {
         val savedApiKey = WidgetPreferences.getApiKey(this)
         if (savedApiKey.isNotEmpty()) etApiKey.setText(savedApiKey)
 
+        spinnerInterval.adapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item,
+            arrayOf("Every 15 minutes", "Every 30 minutes", "Every hour")
+        ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+
         val savedSensorId = WidgetPreferences.getSensorId(this, widgetId)
         if (savedSensorId.isNotEmpty()) {
             etSensorId.setText(savedSensorId)
@@ -76,11 +81,6 @@ class WidgetConfigActivity : Activity() {
             val idx = intervalOptions.indexOf(savedInterval).coerceAtLeast(0)
             spinnerInterval.setSelection(idx)
         }
-
-        spinnerInterval.adapter = ArrayAdapter(
-            this, android.R.layout.simple_spinner_item,
-            arrayOf("Every 15 minutes", "Every 30 minutes", "Every hour")
-        ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
 
         btnSave.setOnClickListener { saveConfiguration() }
     }
@@ -130,6 +130,10 @@ class WidgetConfigActivity : Activity() {
                     WidgetPreferences.saveSensorName(this, widgetId, sensor.sensorName)
                     WidgetPreferences.saveUseFahrenheit(this, widgetId, useFahrenheit)
                     WidgetPreferences.saveUpdateIntervalMinutes(this, widgetId, intervalMinutes)
+
+                    // Immediately show configured state so the widget doesn't linger on
+                    // the configure prompt while waiting for the background job.
+                    try { TempStickWidget.showError(this, widgetId, "Loading…") } catch (_: Exception) {}
 
                     try {
                         TempStickWidget.schedulePeriodicUpdate(this, widgetId, intervalMinutes)
